@@ -123,12 +123,6 @@ html, body { width: 100%; height: 100%; overflow: hidden; }
       /* biar otomatis mengecil di HP */
       width: clamp(130px, 34vw, 160px);
       height: clamp(155px, 40vw, 230px);
-
-
-
-
-
-
       overflow: hidden;
       background: #fff;
       padding: clamp(4px, 1.2vw, 5px) clamp(4px, 1.2vw, 5px) clamp(12px, 2.5vw, 18px) clamp(4px, 1.2vw, 5px);
@@ -260,6 +254,22 @@ html, body { width: 100%; height: 100%; overflow: hidden; }
       <div class="heart-photo"><img src="photos/photo2.jpeg" alt="H2"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo3.jpeg" alt="H3"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo4.jpeg" alt="H4"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo1.jpeg" alt="H1"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo2.jpeg" alt="H2"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo3.jpeg" alt="H3"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo4.jpeg" alt="H4"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo1.jpeg" alt="H1"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo2.jpeg" alt="H2"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo3.jpeg" alt="H3"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo4.jpeg" alt="H4"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo1.jpeg" alt="H1"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo2.jpeg" alt="H2"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo3.jpeg" alt="H3"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo4.jpeg" alt="H4"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo1.jpeg" alt="H1"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo2.jpeg" alt="H2"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo3.jpeg" alt="H3"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo4.jpeg" alt="H4"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo5.jpeg" alt="H5"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo6.jpeg" alt="H6"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo7.jpeg" alt="H7"><span class="placeholder-text"></span></div>
@@ -276,11 +286,8 @@ html, body { width: 100%; height: 100%; overflow: hidden; }
       <div class="heart-photo"><img src="photos/photo18.jpeg" alt="H18"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo19.jpeg" alt="H19"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo20.jpeg" alt="H20"><span class="placeholder-text"></span></div>
-      <div class="heart-photo"><img src="photos/photo21.jpeg" alt="H21"><span class="placeholder-text"></span></div>
-      <div class="heart-photo"><img src="photos/photo22.jpeg" alt="H22"><span class="placeholder-text"></span></div>
-      <div class="heart-photo"><img src="photos/photo23.jpeg" alt="H23"><span class="placeholder-text"></span></div>
-      <div class="heart-photo"><img src="photos/photo24.jpeg" alt="H24"><span class="placeholder-text"></span></div>
       <div class="heart-photo"><img src="photos/photo25.jpeg" alt="H25"><span class="placeholder-text"></span></div>
+      <div class="heart-photo"><img src="photos/photo26.jpeg" alt="H26"><span class="placeholder-text"></span></div>
     </div>
     <div class="heart-title">Untukmu, dengan cinta ❤️</div>
   </div>
@@ -313,13 +320,70 @@ html, body { width: 100%; height: 100%; overflow: hidden; }
     document.getElementById('envelope-memories').addEventListener('click', function() { this.classList.toggle('open'); setTimeout(() => { if (this.classList.contains('open')) { modalContent.innerHTML = messages.memories; letterModal.classList.add('show'); } }, 300); });
     document.querySelector('.modal-close').addEventListener('click', () => { letterModal.classList.remove('show'); });
     letterModal.addEventListener('click', (e) => { if (e.target === letterModal) letterModal.classList.remove('show'); });
-loveBtn.addEventListener('click', () => {
+// ===== Audio after countdown (1-2-3) =====
+    const audio = new Audio('audio/song.mp3');
+    audio.loop = true;
+    audio.volume = 0.9;
+
+    function startSongAfterIntro() {
+      // Autoplay kadang diblokir browser, jadi kita coba play dan fallback kalau gagal
+      const tryPlay = () => {
+        const p = audio.play();
+        if (p && typeof p.then === 'function') {
+          return p.catch(() => false);
+        }
+        return Promise.resolve(true);
+      };
+
+      // Tunggu sebentar biar app-phase sudah aktif
+      setTimeout(() => {
+        tryPlay();
+      }, 100);
+
+      // Fallback: kalau masih diblokir, tampilkan tombol play
+      audio.addEventListener('play', () => {
+        const btn = document.getElementById('audio-play-btn');
+        if (btn) btn.remove();
+      }, { once: true });
+
+      const btn = document.getElementById('audio-play-btn');
+      if (!btn) {
+        const button = document.createElement('button');
+        button.id = 'audio-play-btn';
+        button.textContent = '▶ Putar Lagu';
+        button.style.position = 'fixed';
+        button.style.bottom = '110px';
+        button.style.left = '50%';
+        button.style.transform = 'translateX(-50%)';
+        button.style.zIndex = '999';
+        button.style.border = 'none';
+        button.style.padding = '0.9rem 1.4rem';
+        button.style.borderRadius = '999px';
+        button.style.fontFamily = "'Dancing Script', cursive";
+        button.style.fontSize = '1.2rem';
+        button.style.background = 'linear-gradient(135deg, #ff6b8a 0%, #ff4789 100%)';
+        button.style.color = '#fff';
+        button.style.boxShadow = '0 8px 30px rgba(255,107,138,0.45)';
+        button.style.cursor = 'pointer';
+
+        button.addEventListener('click', async () => {
+          audio.currentTime = 0;
+          await audio.play().catch(() => {});
+          button.remove();
+        });
+
+        document.body.appendChild(button);
+      }
+    }
+
+    loveBtn.addEventListener('click', () => {
       heartOverlay.classList.add('show');
       // Pastikan selalu mulai dari foto pertama saat overlay dibuka
       heartOverlay.scrollLeft = 0;
       // mulai auto scrollll
       startAutoScroll();
     });
+
 
     // Looping endless scroll: saat mendekati ujung kanan, lompat balik ke awal (tanpa terlihat loncat)
     // Catatan: panjang scroll bisa berubah tergantung device, jadi pakai threshold.o
@@ -396,7 +460,25 @@ loveBtn.addEventListener('click', () => {
     resizeCanvas();
     initParticles();
     animateParticles();
-    showIntro();
+showIntro();
+
+    // Mulai lagu setelah hitungan 1-2-3 selesai (intro -> app)
+    let __songStarted = false;
+    function onCountdownDone() {
+      if (__songStarted) return;
+      __songStarted = true;
+      startSongAfterIntro();
+    }
+
+    // Patch kecil: panggil onCountdownDone setiap kali countdown selesai render
+    // showReveal sudah memicu transisi intro -> app, jadi panggil setelah itu.
+    const __origShowReveal = showReveal;
+    showReveal = function() {
+      __origShowReveal();
+      setTimeout(onCountdownDone, 300);
+    };
+
   </script>
 </body>
 </html>
+
